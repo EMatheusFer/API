@@ -1,6 +1,6 @@
 using System.Collections;
 using Microsoft.EntityFrameworkCore;
-using ProjetoAPIBrito.Api.Data;
+using ProjetoAPIBrito.Api.Infrastructure.Data;
 using ProjetoAPIBrito.Api.Domain.Models;
 
 namespace ProjetoAPIBrito.Api.Infrastructure.Repository
@@ -50,9 +50,9 @@ namespace ProjetoAPIBrito.Api.Infrastructure.Repository
         {
             return await _context.Produtos.ToListAsync();
         }
-        public async Task<Produto?> ObterPorId(Produto produto)
+        public async Task<Produto?> ObterPorId(int id)
         {
-            return await _context.Produtos.FirstOrDefaultAsync(p => produto.Id.Equals(produto.Id));
+            return await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }

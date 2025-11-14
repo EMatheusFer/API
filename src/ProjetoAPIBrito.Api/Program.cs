@@ -1,80 +1,11 @@
-// using Microsoft.OpenApi.Models;
-// using Microsoft.AspNetCore.Builder;
-// using ProjetoAPIBrito.Api.Data;
-// using Microsoft.EntityFrameworkCore;
 
-
-
-
-// var builder = WebApplication.CreateBuilder(args);
-// var app = builder.Build();
-
-// ConfigurarInjecaoDeDependencia(builder);
-
-// static void ConfigurarInjecaoDeDependencia(WebApplicationBuilder builder)
-// {
-//     string connectionString = builder.Configuration.GetConnectionString("PADRAO");
-
-//     builder.Services.AddDbContext<AppDbContext>(options =>
-//         options.UseNpgsql(connectionString),
-//         ServiceLifetime.Transient);
-
-//     // builder.Services.AddAutoMapper(typeof(UsuarioProfile), typeof(PessoaProfile));
-
-//     builder.Services.AddHttpContextAccessor();
-
-//     builder.Services
-//         .AddSingleton(builder.Configuration)
-//         .AddSingleton(builder.Environment)
-//         .AddScoped<AppDbContext>();
-// }
-// // --------------------------
-// // Swagger
-// // --------------------------
-// builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen(c =>
-// {
-//     c.SwaggerDoc("v1", new OpenApiInfo
-//     {
-//         Title = "ProjetoAPIBrito.Api",
-//         Version = "v1",
-//         Description = "Documentação da API do ProjetoAPIBrito."
-//     });
-
-//     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-//     {
-//         Description = "JWT Authorization header usando o esquema Bearer (Ex: 'Bearer 12345abcdef')",
-//         Name = "Authorization",
-//         In = ParameterLocation.Header,
-//         Type = SecuritySchemeType.ApiKey,
-//         Scheme = "Bearer"
-//     });
-// });
-
-
-
-// // --------------------------
-// // Middleware
-// // --------------------------
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI(c =>
-//     {
-//         c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProjetoAPIBrito.Api v1");
-//     });
-// }
-
-// app.UseHttpsRedirection();
-
-// // app.MapControllers(); // quando você criar controllers
-
-// app.Run();
 
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using ProjetoAPIBrito.Api.Data;
+using ProjetoAPIBrito.Api.Infrastructure.Data;
+using ProjetoAPIBrito.Api.Infrastructure.Repository;
+using ProjetoAPIBrito.Api.Application.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -96,14 +27,19 @@ static void ConfigurarInjecaoDeDependencia(WebApplicationBuilder builder)
         options.UseNpgsql(connectionString),
         ServiceLifetime.Transient);
 
-    // builder.Services.AddAutoMapper(typeof(UsuarioProfile), typeof(PessoaProfile));
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+    builder.Services.AddScoped<ProdutoRepository>();
+    builder.Services.AddScoped<ProdutoService>();
     builder.Services.AddHttpContextAccessor();
 
     builder.Services
         .AddSingleton(builder.Configuration)
         .AddSingleton(builder.Environment)
         .AddScoped<AppDbContext>();
+  
+    
+
        
 }
 
