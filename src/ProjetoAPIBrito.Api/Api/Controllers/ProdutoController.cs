@@ -15,24 +15,31 @@ namespace ProjetoAPIBrito.Api.Api.Controllers
             _produtoService = produtoService;
         }
 
+        // POST: api/produto
         [HttpPost]
         public async Task<IActionResult> Inserir([FromBody] ProdutoInserirRequestDTO dto)
         {
-            var produto = await _produtoService.CriarProdutoAsync(dto);
+            var result = await _produtoService.CriarProdutoAsync(dto);
+            return Ok(result);
+        }
 
-            
+        // GET: api/produto?id=1
+        [HttpGet]
+        public async Task<IActionResult> ObterPorId([FromQuery] int id)
+        {
+            var produto = await _produtoService.ObterPorIdAsync(id);
+
+            if (produto == null)
+                return NotFound();
+
             return Ok(produto);
         }
 
-        [HttpGet]
-        public async Task<ProdutoResponseDTO> ObterPorId([FromQuery] int id)
+        [HttpGet("todos")]
+        public async Task<ActionResult<List<ProdutoResponseDTO>>> ObterTodos()
         {
-            return await _produtoService.ObterPorId(id);
-
+            var produtos = await _produtoService.ObterTodosAsync();
+            return Ok(produtos);
         }
-    }
-
-    public interface IActionResult<T>
-    {
     }
 }

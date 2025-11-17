@@ -8,11 +8,13 @@ namespace ProjetoAPIBrito.Api.Application.Mappers
     {
         public ProdutoProfile()
         {
+            // DTO -> Model
             CreateMap<ProdutoInserirRequestDTO, Produto>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Ativo, opt => opt.MapFrom(src => true))
                 .ForMember(dest => dest.DataInativacao, opt => opt.Ignore());
 
+            // Model -> ResponseDTO
             CreateMap<Produto, ProdutoResponseDTO>();
         }
     }

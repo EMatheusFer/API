@@ -5,24 +5,42 @@ using ProjetoAPIBrito.Api.Infrastructure.Repository;
 
 namespace ProjetoAPIBrito.Api.Application.Services
 {
-    public class ProdutoService(ProdutoRepository repository, IMapper mapper)
+    public class ProdutoService
     {
-        private readonly ProdutoRepository _repository = repository;
-        private readonly IMapper _mapper = mapper;
+        private readonly ProdutoRepository _repository;
+        private readonly IMapper _mapper;
 
-        public async Task<Produto> CriarProdutoAsync(ProdutoInserirRequestDTO dto)
+        public ProdutoService(ProdutoRepository repository, IMapper mapper)
         {
-            
-            var produto = _mapper.Map<Produto>(dto);
-
-            return await _repository.Adicionar(produto);
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public async Task<ProdutoResponseDTO> ObterPorId(int id)
+
+        public async Task<ProdutoResponseDTO> CriarProdutoAsync(ProdutoInserirRequestDTO dto)
+        {
+            var produto = _mapper.Map<Produto>(dto);
+
+            var criado = await _repository.Adicionar(produto);
+
+            return _mapper.Map<ProdutoResponseDTO>(criado);
+        }
+
+
+        public async Task<ProdutoResponseDTO?> ObterPorIdAsync(int id)
         {
             var produto = await _repository.ObterPorId(id);
 
-            return _mapper.Map<ProdutoResponseDTO>(produto); 
+            if (produto == null)
+                return null;
+
+            return _mapper.Map<ProdutoResponseDTO>(produto);
+        }
+
+        public async Task<List<ProdutoResponseDTO>> ObterTodosAsync()
+        {
+            var produtos = await _repository.ObterTodosAsync();
+            return _mapper.Map<List<ProdutoResponseDTO>>(produtos);
         }
     }
 }

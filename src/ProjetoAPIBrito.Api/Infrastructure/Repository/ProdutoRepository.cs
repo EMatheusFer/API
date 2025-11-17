@@ -54,5 +54,12 @@ namespace ProjetoAPIBrito.Api.Infrastructure.Repository
         {
             return await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id);
         }
+
+        public async Task<List<Produto>> ObterTodosAsync()
+        {
+            return await _context.Produtos
+                .OrderBy(p => p.Nome)
+                .ToListAsync();
+        }
     }
 }
