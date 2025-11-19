@@ -19,13 +19,10 @@ namespace ProjetoAPIBrito.Api.Infrastructure.Repository
 
             return produto;
         }
-
-        public async Task<Produto> Atualizar(Produto produto)
+        public async Task Atualizar(Produto produto)
         {
             _context.Produtos.Update(produto);
             await _context.SaveChangesAsync();
-
-            return produto;
         }
 
         public async Task Inativar(Produto produto)
@@ -46,10 +43,6 @@ namespace ProjetoAPIBrito.Api.Infrastructure.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Produto>> ObterTodos(Produto produto)
-        {
-            return await _context.Produtos.ToListAsync();
-        }
         public async Task<Produto?> ObterPorId(int id)
         {
             return await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id);
@@ -61,5 +54,7 @@ namespace ProjetoAPIBrito.Api.Infrastructure.Repository
                 .OrderBy(p => p.Nome)
                 .ToListAsync();
         }
+
+
     }
 }

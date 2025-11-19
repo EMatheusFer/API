@@ -15,7 +15,7 @@ namespace ProjetoAPIBrito.Api.Api.Controllers
             _produtoService = produtoService;
         }
 
-        // POST: api/produto
+        
         [HttpPost]
         public async Task<IActionResult> Inserir([FromBody] ProdutoInserirRequestDTO dto)
         {
@@ -23,7 +23,7 @@ namespace ProjetoAPIBrito.Api.Api.Controllers
             return Ok(result);
         }
 
-        // GET: api/produto?id=1
+        
         [HttpGet]
         public async Task<IActionResult> ObterPorId([FromQuery] int id)
         {
@@ -40,6 +40,39 @@ namespace ProjetoAPIBrito.Api.Api.Controllers
         {
             var produtos = await _produtoService.ObterTodosAsync();
             return Ok(produtos);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id, [FromBody] ProdutoAtualizarRequestDTO dto)
+        {
+            var atualizado = await _produtoService.AtualizarAsync(id, dto);
+
+            if (atualizado == null)
+                return NotFound();
+
+            return Ok(atualizado);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Inativar(int id)
+        {
+            var sucesso = await _produtoService.InativarAsync(id);
+
+            if (!sucesso)
+                return NotFound("Produto não encontrado.");
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/reativar")]
+        public async Task<IActionResult> Reativar(int id)
+        {
+            var produto = await _produtoService.ReativarAsync(id);
+
+            if (produto == null)
+                return NotFound(new { mensagem = "Produto não encontrado." });
+
+            return Ok(produto);
         }
     }
 }

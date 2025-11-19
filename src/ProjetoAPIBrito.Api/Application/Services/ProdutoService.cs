@@ -42,5 +42,46 @@ namespace ProjetoAPIBrito.Api.Application.Services
             var produtos = await _repository.ObterTodosAsync();
             return _mapper.Map<List<ProdutoResponseDTO>>(produtos);
         }
+
+        public async Task<ProdutoResponseDTO?> AtualizarAsync(int id, ProdutoAtualizarRequestDTO dto)
+        {
+            var produto = await _repository.ObterPorId(id);
+
+            if (produto == null)
+                return null;
+
+            _mapper.Map(dto, produto);
+
+            await _repository.Atualizar(produto);
+
+            return _mapper.Map<ProdutoResponseDTO>(produto);
+        }
+
+        public async Task<bool> InativarAsync(int id)
+        {
+            var produto = await _repository.ObterPorId(id);
+
+            if (produto == null)
+                return false;
+
+            await _repository.Inativar(produto);
+
+            return true;
+        }
+
+        public async Task<ProdutoResponseDTO?> ReativarAsync(int id)
+        {
+            var produto = await _repository.ObterPorId(id);
+
+            if (produto == null)
+                return null;
+
+            if (produto.Ativo)
+                return _mapper.Map<ProdutoResponseDTO>(produto); // já está ativo
+
+            await _repository.Reativar(produto);
+
+            return _mapper.Map<ProdutoResponseDTO>(produto);
+        }
     }
 }
