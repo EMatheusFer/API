@@ -15,7 +15,7 @@ namespace ProjetoAPIBrito.Api.Api.Controllers
             _produtoService = produtoService;
         }
 
-        
+
         [HttpPost]
         public async Task<IActionResult> Inserir([FromBody] ProdutoInserirRequestDTO dto)
         {
@@ -23,9 +23,9 @@ namespace ProjetoAPIBrito.Api.Api.Controllers
             return Ok(result);
         }
 
-        
-        [HttpGet]
-        public async Task<IActionResult> ObterPorId([FromQuery] int id)
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ObterPorId([FromRoute] int id)
         {
             var produto = await _produtoService.ObterPorIdAsync(id);
 
